@@ -66,7 +66,10 @@ python create_json_file.py --image_dir <IMAGE_DIR> --iscrowd <ISCROWD> \
  --image_server <IMAGE_SERVER> --num_persons <NUM_PERSONS> --json_out <JSON_OUTPUT_FILE>
 ```
 
-Note: NUM_PERSONS is number of total persons in dataset, not in IMAGE_DIR. \
+* **Note**: NUM_PERSONS is number of total persons in dataset, not in IMAGE_DIR. \
+
+The script will generate a json file. Run import script above to import annotation to server. \
+
 If you get an error here, then please make sure MongoDB is installed and running.
 
 Go to `http://localhost:8008/edit_image/100238` to edit the annotations for the validation image with `id=100238`.
