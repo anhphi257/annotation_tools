@@ -58,6 +58,15 @@ $ python -m annotation_tools.db_dataset_utils --action load \
 --dataset ~/Downloads/annotations/person_keypoints_val2017.json \
 --normalize
 ```
+
+To import your own dataset, we need to [host images locally](https://github.com/anhphi257/annotation_tools#hosting-images-locally) and run script to create json file
+
+```
+python create_json_file.py --image_dir <IMAGE_DIR> --iscrowd <ISCROWD> \
+ --image_server <IMAGE_SERVER> --num_persons <NUM_PERSONS> --json_out <JSON_OUTPUT_FILE>
+```
+
+Note: NUM_PERSONS is number of total persons in dataset, not in IMAGE_DIR. \
 If you get an error here, then please make sure MongoDB is installed and running.
 
 Go to `http://localhost:8008/edit_image/100238` to edit the annotations for the validation image with `id=100238`.
