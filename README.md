@@ -307,4 +307,4 @@ python anno_coco2voc.py --anno_file=/path/to/json.json \
                          --output_dir=/Path/to/dataset_dir
 ```
 
-**Note:** Only use VOC converter for dataset with multiple persons 
+**Note:** Only use VOC converter for dataset with multiple persons. Format label is ```<people_id>_<pose>_<action>```
