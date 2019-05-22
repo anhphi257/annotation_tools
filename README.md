@@ -300,3 +300,12 @@ We provide a convenience function to clear all collections associated with the b
 ```
 python -m annotation_tools.db_bbox_utils --action drop
 ```
+
+#Convert to VOC format
+Export dataset from database without `--denormalize` argument to json file. 
+Convert the json file to VOC format:
+```
+python anno_coco2voc.py --anno_file=/Path/to/multiple.json \
+                         --type=instance \
+                         --output_dir=/Path/to/dataset_dir
+```
