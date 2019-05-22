@@ -65,6 +65,9 @@ def parse_instance(content, outdir):
         instance['category_id'] = categories[instance['category_id']]
     # group by filename to pool all bbox in same file
     for name, groups in cytoolz.groupby('file_name', merged_info_list).items():
+        multiple = groups[0]['url'].split('/')[-4]
+        if multiple != 'multiple':
+            continue
         subfolder = groups[0]['url'].split('/')[-2]
         folder = groups[0]['url'].split('/')[-3]
         if not os.path.exists(os.path.join(outdir, folder)):
@@ -150,10 +153,10 @@ def main(args):
     if args.type == 'instance':
         # make subdirectories
         sub_dirs = [re.sub(" ", "_", cate['name']) for cate in content['categories']]
-        for sub_dir in sub_dirs:
-            sub_dir = os.path.join(args.output_dir, str(sub_dir))
-            if not os.path.exists(sub_dir):
-                os.makedirs(sub_dir)
+        # for sub_dir in sub_dirs:
+        #     sub_dir = os.path.join(args.output_dir, str(sub_dir))
+        #     if not os.path.exists(sub_dir):
+        #         os.makedirs(sub_dir)
         parse_instance(content, args.output_dir)
     elif args.type == 'keypoint':
         parse_keypoints(content, args.output_dir)
@@ -161,8 +164,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--anno_file", help="annotation file for object instance/keypoint", default="multiple.json")
+    parser.add_argument("--anno_file", help="annotation file for object instance/keypoint")
     parser.add_argument("--type", type=str, help="object instance or keypoint", choices=['instance', 'keypoint'])
-    parser.add_argument("--output_dir", help="output directory for voc annotation xml file", default="dataset")
+    parser.add_argument("--output_dir", help="output directory for voc annotation xml file")
     args = parser.parse_args()
     main(args)

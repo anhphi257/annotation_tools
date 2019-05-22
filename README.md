@@ -39,25 +39,17 @@ Install the python dependencies:
 $ pip install -r requirements.txt
 ```
 
+Extract frame
+```.env
+$ python extract_frame.py --path=/path/to/dataset
+```
+
 Start the annotation tool web server
 ```
 $ python run.py --port 8008
 ```
 
-Download the COCO Dataset annotation file:
-```
-cd ~/Downloads
-wget http://images.cocodataset.org/annotations/annotations_trainval2017.zip
-unzip annotations_trainval2017.zip
-```
 
-Import the validation annotations into the annotation tool:
-```
-# From the annotation_tools repo
-$ python -m annotation_tools.db_dataset_utils --action load \
---dataset ~/Downloads/annotations/person_keypoints_val2017.json \
---normalize
-```
 
 To import your own dataset, we need to [host images locally](https://github.com/anhphi257/annotation_tools#hosting-images-locally) and run script to create json file
 
@@ -68,7 +60,13 @@ python create_json_file.py --image_dir <IMAGE_DIR> --iscrowd <ISCROWD> \
 
 * **Note**: NUM_PERSONS is number of total persons in dataset, not in IMAGE_DIR. \
 
-The script will generate a json file. Run import script above to import annotation to server. \
+The script will generate a json file. Import the validation annotations into the annotation tool:
+```
+# From the annotation_tools repo
+$ python -m annotation_tools.db_dataset_utils --action load \
+--dataset <JSON_OUTPUT_FILE>.json \
+--normalize
+```
 
 If you get an error here, then please make sure MongoDB is installed and running.
 
@@ -187,7 +185,7 @@ We can load the original COCO dataset out of the box. However, we need to tell t
 Load a dataset:
 ```
 python -m annotation_tools.db_dataset_utils --action load \
---dataset ~/Downloads/annotations/person_keypoints_val2017.json \
+--dataset <JSON_OUTPUT_FILE>.json \
 --normalize
 ```
 
@@ -196,7 +194,7 @@ After we have edited the dataset, we can export it. This will produce a json fil
 Export a dataset:
 ```
 python -m annotation_tools.db_dataset_utils --action export \
---output ~/Downloads/annotations/updated_person_keypoints_val2017.json \
+--output <UPDATED_JSON_OUTPUT>.json \
 --denormalize
 ```
 
@@ -209,14 +207,14 @@ python -m annotation_tools.db_dataset_utils --action drop
 
 It might be the case that the images you want to edit are on your local machine and not accessible via a url. In this case, you can use python's SimpleHTTPServer to start a local webserver to serve the images directly from your machine. If the images are located in `/home/gvanhorn/images` then you can:
 ```
-cd /home/gvanhorn
+cd dataset
 python -m SimpleHTTPServer 8007
 ```
-This starts a webserver on port 8007 that can serve files from the `/home/gvanhorn` directory. You can now access images via the browser by going to `localhost:8007/images/397133.jpg`, where `397133.jpg` is an image file in `/home/gvanhorn/images`. Now you can create a json dataset file that has `localhost:8007/images/397133.jpg` in the `url` field for the image with id `397133`. As this technique makes all files in the directory `/home/gvanhorn` accessible, this should be used with caution.
+This starts a webserver on port 8007 that can serve files from the `dataset` directory. You can now access images via the browser by going to `localhost:8007/single/retract_from_shelf/stand/cam01_video01/cam01_video01_1.jpg`, where `cam01_video01_1.jpg` is an image file in `dataset/single/retract_from_shelf/stand/cam01_video01/`. 
 
 # Editing an Image
 
-The edit tool is meant to be used by a "super user." It is a convenient tool to visualize and edit all annotations on an image. All changes will overwrite the annotations in the database. To edit a specific image, use the image id (which you specified in the dataset file that you loaded in the previous section) and go to the url `localhost:8008/edit_image/397133`, where the image id is `397133` in this case. Make any modificaiton to the image that you need to and save the annotations. Note that when saving the annotations you directly overwrite the previous version of the annotations.
+The edit tool is meant to be used by a "super user." It is a convenient tool to visualize and edit all annotations on an image. All changes will overwrite the annotations in the database. To edit a specific image, use the image id (which you specified in the dataset file that you loaded in the previous section) and go to the url `localhost:8008/edit_image/<image_id>`, where the image id is `<image_id>` in this case. Make any modificaiton to the image that you need to and save the annotations. Note that when saving the annotations you directly overwrite the previous version of the annotations.
 
 We currently support editing the class labels, bounding boxes, and keypoints. Editing segmentations is not currently supported.
 
@@ -302,10 +300,11 @@ python -m annotation_tools.db_bbox_utils --action drop
 ```
 
 # Convert to VOC format
-Export dataset from database without `--denormalize` argument to json file. 
 Convert the json file to VOC format:
 ```
-python anno_coco2voc.py --anno_file=/Path/to/multiple.json \
+python anno_coco2voc.py --anno_file=/path/to/json.json \
                          --type=instance \
                          --output_dir=/Path/to/dataset_dir
 ```
+
+**Note:** Only use VOC converter for dataset with multiple persons 
