@@ -30,7 +30,7 @@ Make sure that MongoDB is installed and running (e.g. for Ubuntu 16.04 see [here
 
 Clone the repo:
 ```
-$ git clone https://github.com/visipedia/annotation_tools.git
+$ git clone https://github.com/anhphi257/annotation_tools.git
 $ cd annotation_tools
 ```
 
